@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ravindi's English Academy | Master English with Excellence</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Add Leaflet CSS for the map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Add Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 5px 0;
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: #2c3e50;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            color: #3498db;
+            margin-right: 10px;
+            font-size: 32px;
+        }
+        
+        .logo span {
+            color: #e74c3c;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            font-size: 16px;
+            transition: color 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-links a:hover {
+            color: #3498db;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #3498db;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #2c3e50;
+            cursor: pointer;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        /* Section Styling */
+        section {
+            padding: 100px 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        section:nth-child(even) {
+            background-color: #f0f7ff;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 42px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+        
+        /* Home Section */
+        #home {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.9) 0%, rgba(41, 128, 185, 0.9) 100%), url('https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding-top: 150px;
+        }
+        
+        .hero-content {
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        #home h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 60px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        #home h2 {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #e74c3c;
+            color: white;
+            padding: 15px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid #e74c3c;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .cta-button:hover {
+            background-color: transparent;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* About Section */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+            text-align: justify;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: transform 0.5s ease;
+        }
+        
+        .about-image:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* Courses Section */
+        .courses-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .course-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .course-icon {
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+        }
+        
+        .course-info {
+            padding: 25px;
+        }
+        
+        .course-info h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        /* Gallery Section - 3x3 grid on desktop */
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            aspect-ratio: 1/1;
+            background-color: #f0f0f0;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        /* For browsers that don't support aspect-ratio */
+        @supports not (aspect-ratio: 1/1) {
+            .gallery-item {
+                height: 0;
+                padding-bottom: 100%;
+            }
+            
+            .image-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+        
+        /* Location Section */
+        .location-section {
+            padding: 100px 0;
+            background-color: #fff;
+        }
+        
+        .location-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        .location-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .location-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #3498db;
+        }
+        
+        .location-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .location-details h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .location-details p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .location-details .highlight {
+            background-color: rgba(52, 152, 219, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #3498db;
+        }
+        
+        .transport-info {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .transport-info h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .transport-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .transport-list li {
+            padding: 8px 0;
+            color: #666;
+        }
+        
+        .transport-list i {
+            color: #2ecc71;
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .map-container {
+            flex: 1;
+            min-width: 300px;
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        #academyMap {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 250px;
+        }
+        
+        .map-overlay h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .map-overlay p {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        /* Directions Button */
+        .directions-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+        }
+        
+        .directions-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* Hours of Operation */
+        .hours-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        .hours-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .hours-table tr:last-child {
+            border-bottom: none;
+        }
+        
+        .hours-table td {
+            padding: 10px 0;
+            color: #666;
+        }
+        
+        .hours-table td:first-child {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .hours-table .highlight-day {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        /* Apply & Contact Sections */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            transition: border 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .contact-info {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+        
+        .contact-item {
+            text-align: center;
+            flex: 1;
+            min-width: 250px;
+            margin: 20px;
+        }
+        
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            color: white;
+        }
+        
+        /* Form Notification Styles */
+        .notification {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 500;
+            animation: slideDown 0.5s ease;
+        }
+        
+        .notification.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .notification.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .notification.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* Fallback image styling */
+        .image-fallback {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #3498db;
+        }
+        
+        .copyright {
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+            color: #bdc3c7;
+            font-size: 14px;
+        }
+        
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background-color: #3498db;
+            transform: translateY(-3px);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                order: -1;
+            }
+            
+            /* Gallery responsive for tablets - 2 columns */
+            .gallery-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .location-container {
+                flex-direction: column;
+            }
+            
+            .location-info, .map-container {
+                width: 100%;
+            }
+            
+            .map-container {
+                height: 400px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 0;
+                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 999;
+                height: calc(100vh - 80px);
+                overflow-y: auto;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+                width: 100%;
+                padding: 0 20px;
+            }
+            
+            .nav-links a {
+                display: block;
+                width: 100%;
+                padding: 15px 20px;
+                background-color: #f8f9fa;
+                border-radius: 8px;
+                text-align: center;
+                font-size: 18px;
+                font-weight: 500;
+            }
+            
+            .nav-links a:hover {
+                background-color: #3498db;
+                color: white !important;
+                transform: translateX(5px);
+            }
+            
+            .nav-links a::after {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .mobile-menu-btn:hover {
+                background-color: rgba(52, 152, 219, 0.1);
+                border-radius: 5px;
+            }
+            
+            .mobile-menu-btn:active {
+                transform: scale(0.95);
+            }
+            
+            .mobile-menu-btn i {
+                font-size: 24px;
+                color: #2c3e50;
+                transition: color 0.3s ease;
+            }
+            
+            .mobile-menu-btn:hover i {
+                color: #3498db;
+            }
+            
+            #home h1 {
+                font-size: 42px;
+            }
+            
+            #home h2 {
+                font-size: 22px;
+            }
+            
+            .section-title {
+                font-size: 36px;
+            }
+            
+            /* Gallery responsive for medium mobile - still 2 columns */
+            .gallery-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .location-card {
+                padding: 30px;
+            }
+            
+            .map-container {
+                height: 350px;
+            }
+            
+            .map-overlay {
+                top: 10px;
+                left: 10px;
+                padding: 10px 15px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            section {
+                padding: 80px 0;
+            }
+            
+            #home h1 {
+                font-size: 36px;
+            }
+            
+            .section-title {
+                font-size: 32px;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .about-image img {
+                height: 250px;
+            }
+            
+            /* Gallery responsive for small mobile - 1 column */
+            .gallery-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+            
+            .location-card {
+                padding: 25px 20px;
+            }
+            
+            .map-container {
+                height: 300px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .contact-item {
+                margin: 15px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <div class="logo-wrapper">
+                    <a href="#home" class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        Ravindi's<span>English</span>
+                    </a>
+                </div>
+
+                <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Toggle navigation menu">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#courses">Courses</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#location">Location</a></li>
+                    <li><a href="#apply">Apply</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Ravindi's English Academy</h1>
+                <h2>Master English with Excellence and Confidence</h2>
+                <p>Join our immersive English learning experience designed to unlock your language potential and open doors to global opportunities.</p>
+                <a href="#apply" class="cta-button">Start Your Journey</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">About Our Academy</h2>
+            <p class="section-subtitle">Discover our passion for teaching English and our commitment to student success</p>
+            
+            <div class="about-content animate-on-scroll">
+                <div class="about-text">
+                    <h3>Why Choose Ravindi's English Academy?</h3>
+                    <p>Founded with a passion for language education, Ravindi's English Academy has been transforming students' language skills for over a decade. Our innovative teaching methods combine traditional classroom techniques with modern interactive approaches.</p>
+                    <p>We specialize in creating personalized learning paths that cater to individual needs, whether you're a beginner or looking to refine advanced English skills. Our certified instructors bring years of experience and a dedication to student success.</p>
+                    <p>At Ravindi's, we believe that language learning should be engaging, practical, and enjoyable. Our students don't just learn English - they experience it through cultural immersion, real-world practice, and dynamic activities.</p>
+                </div>
+                <div class="about-image">
+                    <div class="image-container">
+                        <img src="class/about-class.jpeg" 
+                            alt="English class in session"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1524178234883-043d5c3f3cf4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1170&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses">
+        <div class="container">
+            <h2 class="section-title">Our Courses</h2>
+            <p class="section-subtitle">Comprehensive English programs designed for all proficiency levels</p>
+            
+            <div class="courses-container">
+                <div class="course-card animate-on-scroll">
+                    <div class="course-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="course-info">
+                        <h3>Exam Preparation</h3>
+                        <p>Comprehensive English preparation for all academic exams including semester tests, Grade 5 Scholarship, and Ordinary Level exams.</p>
+                        <ul>
+                            <li>All Term exams</li>
+                            <li>Grade 5 Scholarship (English Part)</li>
+                            <li>Ordinary Level Preparation</li>
+                            <li>Mock Tests & Performance Feedback</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="course-card animate-on-scroll">
+                    <div class="course-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="course-info">
+                        <h3>Conversational English</h3>
+                        <p>Improve spoken English for everyday communication, social interactions, and confidence in conversation.</p>
+                        <ul>
+                            <li>Practical Dialogues</li>
+                            <li>Interactive Speaking Activities</li>
+                            <li>Fluency & Pronunciation Focus</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="course-card animate-on-scroll">
+                    <div class="course-icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <div class="course-info">
+                        <h3>Creative Writing</h3>
+                        <p>Develop writing skills for essays, stories, and reports with grammar accuracy and style.</p>
+                        <ul>
+                            <li>Essay & Story Writing</li>
+                            <li>Grammar & Style Improvement</li>
+                            <li>Writing Workshops & Feedback</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery">
+        <div class="container">
+            <h2 class="section-title">Learning Gallery</h2>
+            <p class="section-subtitle">Moments from our classrooms, events, and student activities</p>
+            
+            <!-- 3x3 Gallery Grid -->
+            <div class="gallery-container">
+                <!-- Row 1 -->
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery1.jpeg" 
+                             alt="Classroom discussion"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery2.jpeg" 
+                             alt="Group study session"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1524178234883-043d5c3f3cf4?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery3.jpeg" 
+                             alt="Language lab"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 2 -->
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery4.jpeg" 
+                             alt="Student presentation"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery5.jpeg" 
+                             alt="Certificate ceremony"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery6.jpeg" 
+                             alt="Cultural event"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Row 3 -->
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery7.jpeg" 
+                             alt="One-on-one tutoring"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery8.jpeg" 
+                             alt="Classroom games"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item animate-on-scroll">
+                    <div class="image-container">
+                        <img src="class/gallery9.jpeg" 
+                             alt="Group activity"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80';">
+                        <div class="gallery-overlay">
+                            <i class="fas fa-search-plus fa-2x" style="color: white;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section id="location" class="location-section">
+        <div class="container">
+            <h2 class="section-title">Find Our Academy</h2>
+            <p class="section-subtitle">Visit us at our convenient location in Pebotuwa, Ratnapura</p>
+            
+            <div class="location-container animate-on-scroll">
+                <div class="location-info">
+                    <div class="location-card">
+                        <div class="location-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        
+                        <div class="location-details">
+                            <h3>Class Location & Directions</h3>
+                            
+                            <p><strong><i class="fas fa-school"></i> Academy Address:</strong></p>
+                            <div class="highlight">
+                                Ravindi's English Academy<br>
+                                Pebotuwa Junction<br>
+                                Pebotuwa, Ratnapura<br>
+                                Sri Lanka
+                            </div>
+                            
+                            <p><strong><i class="fas fa-clock"></i> Class Hours:</strong></p>
+                            <table class="hours-table">
+                                <tr>
+                                    <td>Monday - Friday</td>
+                                    <td>1:30 PM - 5:30 PM</td>
+                                </tr>
+                                <tr>
+                                    <td>Saturday - Sunday</td>
+                                    <td class="highlight-day">8:30 AM - 5:30 PM</td>
+                                </tr>
+                                <tr>
+                                    <td>Special/Holiday Classes</td>
+                                    <td>As Announced</td>
+                                </tr>
+                            </table>
+                            
+                            <div class="transport-info">
+                                <h4><i class="fas fa-bus"></i> How to Reach Us:</h4>
+                                <ul class="transport-list">
+                                    <li><i class="fas fa-check-circle"></i> Easily accessible from Ratnapura town</li>
+                                    <li><i class="fas fa-check-circle"></i> Located at Pebotuwa Junction main road</li>
+                                    <li><i class="fas fa-check-circle"></i> Ample parking space available</li>
+                                    <li><i class="fas fa-check-circle"></i> Well-connected by public transport</li>
+                                    <li><i class="fas fa-check-circle"></i> Safe and secure neighborhood</li>
+                                </ul>
+                            </div>
+                            
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=6.549375232160337,80.44284577756302" 
+                               target="_blank" 
+                               class="directions-btn" 
+                               id="directionsBtn">
+                                <i class="fas fa-directions"></i>
+                                Get Directions
+                            </a>
+                            
+                            <button class="directions-btn" id="shareLocationBtn" style="margin-left: 10px;">
+                                <i class="fas fa-share-alt"></i>
+                                Share Location
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="map-container">
+                    <div id="academyMap"></div>
+                    <div class="map-overlay">
+                        <h4><i class="fas fa-info-circle"></i> Our Location</h4>
+                        <p>Tap/Click on the map to zoom. Drag to explore the area around our academy.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="additional-info animate-on-scroll" style="margin-top: 50px; text-align: center;">
+                <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 30px; border-radius: 15px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">
+                        <i class="fas fa-lightbulb"></i> Pro Tip for First Visit
+                    </h3>
+                    <p style="color: #666; max-width: 800px; margin: 0 auto;">
+                        We recommend arriving 10-15 minutes early for your first class. This gives you time to 
+                        familiarize yourself with our facilities and meet your instructor. Look for our bright 
+                        "Ravindi's English Academy" sign at the Pebotuwa Junction!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Apply Section -->
+    <section id="apply">
+        <div class="container">
+            <h2 class="section-title">Apply Now</h2>
+            <p class="section-subtitle">Begin your English learning journey with us today</p>
+            
+            <div class="form-container animate-on-scroll">
+                <div id="notificationArea"></div>
+                
+                <form id="applicationForm">
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" class="form-control" placeholder="Enter your age" min="3" max="80">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="course">Select Course *</label>
+                            <select id="course" class="form-control" required>
+                                <option value="" disabled selected>Choose a course</option>
+                                <option value="General English">General English</option>
+                                <option value="Conversational English">Conversational English</option>
+                                <option value="Kids English Program">Kids English Program</option>
+                                <option value="Advanced Writing Skills">Advanced Writing Skills</option>
+                                <option value="Grammar Mastery">Grammar Mastery</option>
+                                <option value="English for Everyday Life">English for Everyday Life</option>
+                            </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="level">Current English Level *</label>
+                            <select id="level" class="form-control" required>
+                                <option value="" disabled selected>Select your current level</option>
+                                <option value="Pre-School">Pre-School</option>
+                                <option value="Grade 1">Grade 1</option>
+                                <option value="Grade 2">Grade 2</option>
+                                <option value="Grade 3">Grade 3</option>
+                                <option value="Grade 4">Grade 4</option>
+                                <option value="Grade 5">Grade 5</option>
+                                <option value="Grade 6">Grade 6</option>
+                                <option value="Grade 7">Grade 7</option>
+                                <option value="Grade 8">Grade 8</option>
+                                <option value="Grade 9">Grade 9</option>
+                                <option value="Grade 10">Grade 10</option>
+                                <option value="Grade 11">Grade 11</option>
+                            </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="schedule">Preferred Schedule</label>
+                            <select id="schedule" class="form-control">
+                                <option value="" selected>Choose Preferred Schedule</option>
+                                <option value="Monday to Friday 1:30 PM - 5:30 PM">Monday to Friday 1:30 PM - 5:30 PM</option>
+                                <option value="Saturday and Sunday 8:30 AM - 5:30 PM">Saturday and Sunday 8:30 AM - 5:30 PM</option>
+                                <option value="Online Only">Online Only</option>
+                            </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Tell us about your language goals *</label>
+                        <textarea id="message" class="form-control" rows="5" placeholder="What do you hope to achieve by learning English? (e.g., career advancement, study abroad, travel, etc.)" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="howHeard">How did you hear about us?</label>
+                        <select id="howHeard" class="form-control">
+                            <option value="" selected>Select an option</option>
+                            <option value="Social Media">Social Media</option>
+                            <option value="Friend/Family Recommendation">Friend/Family Recommendation</option>
+                            <option value="Search Engine">Search Engine</option>
+                            <option value="Advertisement">Advertisement</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <span id="submitText">Submit Application</span>
+                        <span id="submitSpinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Sending Application...
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <p class="section-subtitle">Get in touch with our team for more information</p>
+            
+            <div class="contact-info">
+                <div class="contact-item animate-on-scroll">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>Visit Us</h3>
+                    <p>Pebotuwa Junction<br>Pebotuwa, Ratnapura</p>
+                </div>
+                
+                <div class="contact-item animate-on-scroll">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3>Call Us</h3>
+                    <p>+94 76 003 8361<br>+94 70 351 7570</p>
+                </div>
+                
+                <div class="contact-item animate-on-scroll">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email Us</h3>
+                    <p>ravindimadushika204@gmail.com<br>dilshankanishka557@gmail.com</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    Ravindi's English Academy
+                </div>
+                
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#courses">Courses</a>
+                    <a href="#gallery">Gallery</a>
+                    <a href="#location">Location</a>
+                    <a href="#apply">Apply</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Ravindi's English Academy. All Rights Reserved. | Designed with passion for language education</p>
+            </div>
+        </div>
+    </footer>
+
+<script>
+    // Initialize EmailJS with your credentials
+    emailjs.init("YbFMCzvnp9RUDwiAY");
+    
+    // Email configuration
+    const EMAIL_CONFIG = {
+        serviceId: "service_u55hulp",
+        templateId: "template_uo62jig",
+        adminEmail: "ravindimadushika204@gmail.com"
+    };
+    
+    // ===== MOBILE MENU TOGGLE - FIXED VERSION =====
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    // Function to close mobile menu
+    function closeMobileMenu() {
+        navLinks.classList.remove('active');
+        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+    
+    // Function to toggle mobile menu
+    function toggleMobileMenu(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        const isActive = navLinks.classList.contains('active');
+        
+        if (isActive) {
+            closeMobileMenu();
+        } else {
+            navLinks.classList.add('active');
+            mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+            mobileMenuBtn.setAttribute('aria-expanded', 'true');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+    
+    // Add click event to mobile menu button
+    mobileMenuBtn.addEventListener('click', function(e) {
+        toggleMobileMenu(e);
+        return false;
+    });
+    
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Close menu first
+            closeMobileMenu();
+            
+            // Handle smooth scrolling for internal links
+            const href = this.getAttribute('href');
+            if (href.startsWith('#')) {
+                e.preventDefault();
+                const targetId = href.substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    const headerHeight = document.getElementById('header').offsetHeight;
+                    const targetPosition = targetElement.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            }
+        });
+    });
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (navLinks.classList.contains('active') && 
+            !navLinks.contains(e.target) && 
+            !mobileMenuBtn.contains(e.target)) {
+            closeMobileMenu();
+        }
+    });
+    
+    // Close menu on escape key press
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    });
+    
+    // Close menu on window resize (if resized to desktop)
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 768 && navLinks.classList.contains('active')) {
+            closeMobileMenu();
+        }
+    });
+    
+    // ===== HEADER SCROLL EFFECT =====
+    window.addEventListener('scroll', () => {
+        const header = document.getElementById('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+    
+    // ===== ANIMATION ON SCROLL =====
+    const animateElements = document.querySelectorAll('.animate-on-scroll');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+    
+    animateElements.forEach(el => observer.observe(el));
+    
+    // ===== MAP INITIALIZATION =====
+    function initMap() {
+        // Exact coordinates for Pebotuwa Junction, Ratnapura
+        const academyLocation = [6.549375232160337, 80.44284577756302];
+        
+        // Initialize the map
+        const map = L.map('academyMap').setView(academyLocation, 17);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Custom icon for the academy
+        const academyIcon = L.divIcon({
+            html: '<div style="background: linear-gradient(135deg, #3498db, #2ecc71); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; border: 3px solid white; box-shadow: 0 0 15px rgba(0,0,0,0.3);"><i class="fas fa-graduation-cap"></i></div>',
+            className: 'custom-marker',
+            iconSize: [50, 50],
+            iconAnchor: [25, 50],
+            popupAnchor: [0, -50]
+        });
+        
+        // Add marker with popup
+        const marker = L.marker(academyLocation, { icon: academyIcon }).addTo(map);
+        
+        marker.bindPopup(`
+            <div style="text-align: center; padding: 10px; max-width: 250px;">
+                <h3 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 18px;">🎓 Ravindi's English Academy</h3>
+                <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">
+                    <strong>📍 Pebotuwa Junction, Ratnapura</strong><br>
+                    Sri Lanka
+                </p>
+                <p style="margin: 0 0 10px 0; color: #666; font-size: 12px;">
+                    <i class="fas fa-phone"></i> +94 76 003 8361<br>
+                    <i class="fas fa-envelope"></i> ravindimadushika204@gmail.com
+                </p>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=6.549375232160337,80.44284577756302" 
+                   target="_blank" 
+                   style="display: inline-block; background: #3498db; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 14px; margin-top: 5px;">
+                    <i class="fas fa-directions"></i> Get Directions
+                </a>
+            </div>
+        `).openPopup();
+        
+        // Add a circle to show approximate area
+        L.circle(academyLocation, {
+            color: '#3498db',
+            fillColor: '#3498db',
+            fillOpacity: 0.1,
+            radius: 50
+        }).addTo(map);
+        
+        // Add some nearby landmarks (adjusted based on coordinates)
+        const landmarks = [
+            {
+                coords: [6.5492, 80.4426],
+                name: "Main Road Access",
+                icon: "fas fa-road",
+                color: "#e74c3c"
+            },
+            {
+                coords: [6.5495, 80.4430],
+                name: "Parking Area",
+                icon: "fas fa-parking",
+                color: "#f39c12"
+            },
+            {
+                coords: [6.5491, 80.4429],
+                name: "Bus Route",
+                icon: "fas fa-bus",
+                color: "#9b59b6"
+            }
+        ];
+        
+        landmarks.forEach(landmark => {
+            const landIcon = L.divIcon({
+                html: `<div style="background: ${landmark.color}; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; border: 3px solid white; box-shadow: 0 0 10px rgba(0,0,0,0.2);"><i class="${landmark.icon}"></i></div>`,
+                className: 'landmark-marker',
+                iconSize: [40, 40],
+                iconAnchor: [20, 40]
+            });
+            
+            L.marker(landmark.coords, { icon: landIcon })
+                .addTo(map)
+                .bindPopup(`<strong>${landmark.name}</strong><br>Near the academy`);
+        });
+        
+        // Fit bounds to show both marker and landmarks
+        const bounds = L.latLngBounds([
+            academyLocation,
+            ...landmarks.map(l => l.coords)
+        ]);
+        map.fitBounds(bounds, { padding: [50, 50] });
+        
+        // Save map reference for later use
+        window.academyMap = map;
+    }
+    
+    // ===== SHARE LOCATION FUNCTIONALITY =====
+    document.getElementById('shareLocationBtn').addEventListener('click', function() {
+        const locationText = `Ravindi's English Academy\n📍 Pebotuwa Junction, Pebotuwa, Ratnapura, Sri Lanka\n📞 +94 76 003 8361\n📧 ravindimadushika204@gmail.com\n🌐 ${window.location.href}`;
+        const googleMapsUrl = `https://www.google.com/maps?q=6.549375232160337,80.44284577756302`;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Ravindi\'s English Academy Location',
+                text: 'Visit Ravindi\'s English Academy at Pebotuwa Junction, Ratnapura. Join us for English classes!',
+                url: googleMapsUrl
+            })
+            .then(() => console.log('Location shared successfully'))
+            .catch((error) => {
+                console.log('Error sharing:', error);
+                // Fallback to clipboard
+                copyToClipboard(locationText);
+            });
+        } else {
+            // Fallback: Copy to clipboard
+            copyToClipboard(locationText);
+        }
+    });
+    
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                // Show temporary notification
+                const originalText = document.getElementById('shareLocationBtn').innerHTML;
+                document.getElementById('shareLocationBtn').innerHTML = '<i class="fas fa-check"></i> Copied!';
+                document.getElementById('shareLocationBtn').style.background = '#2ecc71';
+                
+                setTimeout(() => {
+                    document.getElementById('shareLocationBtn').innerHTML = originalText;
+                    document.getElementById('shareLocationBtn').style.background = '';
+                }, 2000);
+            })
+            .catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Location details:\n\n' + text + '\n\nYou can copy this information.');
+            });
+    }
+    
+    // ===== FORM SUBMISSION WITH EMAILJS =====
+    const applicationForm = document.getElementById('applicationForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const notificationArea = document.getElementById('notificationArea');
+    
+    function showNotification(message, type = 'info') {
+        // Remove any existing notification
+        notificationArea.innerHTML = '';
+        
+        // Create new notification
+        const notificationDiv = document.createElement('div');
+        notificationDiv.className = 'notification ' + type;
+        notificationDiv.innerHTML = message;
+        
+        notificationArea.appendChild(notificationDiv);
+        
+        // Auto-hide success messages after 10 seconds
+        if (type === 'success') {
+            setTimeout(() => {
+                if (notificationDiv.parentNode === notificationArea) {
+                    notificationDiv.style.opacity = '0';
+                    notificationDiv.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => {
+                        if (notificationDiv.parentNode === notificationArea) {
+                            notificationArea.removeChild(notificationDiv);
+                        }
+                    }, 500);
+                }
+            }, 10000);
+        }
+    }
+    
+    applicationForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Get form data
+        const formData = {
+            fullName: document.getElementById('fullName').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            age: document.getElementById('age').value || 'Not specified',
+            course: document.getElementById('course').value,
+            level: document.getElementById('level').value,
+            schedule: document.getElementById('schedule').value || 'Flexible',
+            message: document.getElementById('message').value,
+            howHeard: document.getElementById('howHeard').value || 'Not specified',
+            submissionDate: new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            })
+        };
+        
+        // Show loading state
+        submitText.style.display = 'none';
+        submitSpinner.style.display = 'inline-block';
+        submitBtn.disabled = true;
+        
+        // Clear any previous notifications
+        notificationArea.innerHTML = '';
+        
+        try {
+            // Prepare email parameters for admin notification
+            const emailParams = {
+                to_name: "Admin",
+                to_email: EMAIL_CONFIG.adminEmail,
+                from_name: "Ravindi's English Academy Website",
+                fullName: formData.fullName,
+                email: formData.email,
+                phone: formData.phone,
+                age: formData.age,
+                course: formData.course,
+                level: formData.level,
+                schedule: formData.schedule,
+                message: formData.message,
+                howHeard: formData.howHeard,
+                submission_date: formData.submissionDate,
+                email_subject: '🎓 New Application: ' + formData.fullName + ' - ' + formData.course,
+                admin_email: EMAIL_CONFIG.adminEmail
+            };
+            
+            console.log("📧 Sending email with parameters:", emailParams);
+            
+            // Send email using EmailJS
+            const emailResponse = await emailjs.send(
+                EMAIL_CONFIG.serviceId,
+                EMAIL_CONFIG.templateId,
+                emailParams
+            );
+            
+            console.log("📨 EmailJS Response:", emailResponse);
+            
+            if (emailResponse.status === 200) {
+                // Success notification
+                showNotification(
+                    '<h3><i class="fas fa-check-circle"></i> Application Submitted Successfully!</h3>' +
+                    '<p>Thank you <strong>' + formData.fullName + '</strong> for applying to <strong>' + formData.course + '</strong>.</p>' +
+                    '<p>We have sent a confirmation email to <strong>' + formData.email + '</strong> and our admin team has been notified at <strong>' + EMAIL_CONFIG.adminEmail + '</strong>.</p>' +
+                    '<p>We will contact you within 24-48 hours to discuss the next steps.</p>' +
+                    '<div style="margin-top: 15px; padding: 10px; background: #c3e6cb; border-radius: 5px;">' +
+                    '<p style="margin: 5px 0;"><strong>Application Summary:</strong></p>' +
+                    '<p style="margin: 5px 0; font-size: 14px;">• <strong>Name:</strong> ' + formData.fullName + '</p>' +
+                    '<p style="margin: 5px 0; font-size: 14px;">• <strong>Course:</strong> ' + formData.course + '</p>' +
+                    '<p style="margin: 5px 0; font-size: 14px;">• <strong>Level:</strong> ' + formData.level + '</p>' +
+                    '<p style="margin: 5px 0; font-size: 14px;">• <strong>Submitted:</strong> ' + formData.submissionDate + '</p>' +
+                    '</div>',
+                    'success'
+                );
+                
+                // Reset form
+                applicationForm.reset();
+                
+                // Log success
+                console.log('✅ Application submitted successfully:', formData);
+                console.log('✅ Admin notification sent to:', EMAIL_CONFIG.adminEmail);
+                console.log('✅ EmailJS response:', emailResponse);
+                
+            } else {
+                throw new Error('Email service returned an error');
+            }
+            
+        } catch (error) {
+            console.error('❌ Error submitting application:', error);
+            
+            // Show error notification
+            showNotification(
+                '<h3><i class="fas fa-exclamation-triangle"></i> Application Submission Error</h3>' +
+                '<p>There was an issue submitting your application. Please try again or contact us directly at ' + EMAIL_CONFIG.adminEmail + '.</p>' +
+                '<p style="font-size: 14px; margin-top: 10px;">Error details: ' + (error.message || 'Unknown error') + '</p>' +
+                '<p style="font-size: 14px; margin-top: 5px;">Your application data was saved locally. You can try again in a few minutes.</p>',
+                'error'
+            );
+            
+            // Save form data locally in case of error
+            localStorage.setItem('lastApplicationAttempt', JSON.stringify(formData));
+            
+        } finally {
+            // Reset button state
+            submitText.style.display = 'inline-block';
+            submitSpinner.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    });
+    
+    // ===== SMOOTH SCROLLING FOR NAVIGATION LINKS =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            // Don't prevent default for empty hashes
+            if (this.getAttribute('href') === '#') return;
+            
+            // Don't prevent default for mobile menu links (handled separately)
+            if (this.closest('.nav-links') && window.innerWidth <= 768) return;
+            
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                // Calculate scroll position (accounting for fixed header)
+                const headerHeight = document.getElementById('header').offsetHeight;
+                const targetPosition = targetElement.offsetTop - headerHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // ===== PAGE LOAD INITIALIZATION =====
+    window.addEventListener('load', () => {
+        // Initialize mobile menu state
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        
+        // Initialize the map
+        setTimeout(() => {
+            initMap();
+            console.log('🗺️ Map initialized with exact location: 6.549375232160337, 80.44284577756302');
+        }, 1000);
+        
+        // Show EmailJS configuration status
+        setTimeout(() => {
+            showNotification(
+                '<h3><i class="fas fa-envelope"></i> Email Notifications Active</h3>' +
+                '<p>Application submissions will send emails to <strong>' + EMAIL_CONFIG.adminEmail + '</strong></p>' +
+                '<p style="font-size: 14px; margin-top: 5px;">Service: ' + EMAIL_CONFIG.serviceId + ' | Template: ' + EMAIL_CONFIG.templateId + '</p>',
+                'info'
+            );
+            
+            // Auto-hide info message after 5 seconds
+            setTimeout(() => {
+                const notification = document.querySelector('.notification.info');
+                if (notification && notification.parentNode === notificationArea) {
+                    notification.style.opacity = '0';
+                    notification.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => {
+                        if (notification.parentNode === notificationArea) {
+                            notificationArea.removeChild(notification);
+                        }
+                    }, 500);
+                }
+            }, 5000);
+        }, 1000);
+        
+        // Check for previously saved form data
+        const lastAttempt = localStorage.getItem('lastApplicationAttempt');
+        if (lastAttempt) {
+            console.log('Found saved application data from previous attempt');
+        }
+        
+        // Initialize EmailJS
+        console.log('EmailJS initialized with Public Key: YbFMCzvnp9RUDwiAY');
+        console.log('Email will be sent to:', EMAIL_CONFIG.adminEmail);
+        
+        // Test geolocation
+        if (navigator.geolocation) {
+            console.log('📍 Geolocation is supported by this browser');
+        }
+    });
+    
+    // ===== MAP RESIZE ON SECTION VISIBILITY =====
+    const locationSection = document.getElementById('location');
+    const observerOptions = {
+        threshold: 0.1
+    };
+    
+    const locationObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && window.academyMap) {
+                // Trigger map resize when section becomes visible
+                setTimeout(() => {
+                    window.academyMap.invalidateSize();
+                    console.log('🗺️ Map resized for optimal display');
+                }, 300);
+            }
+        });
+    }, observerOptions);
+    
+    locationObserver.observe(locationSection);
+    
+    // Test EmailJS connection on page load
+    (function testEmailJS() {
+        console.log('Testing EmailJS connection...');
+        console.log('EmailJS initialized successfully');
+    })();
+</script>
+</body>
+</html>
